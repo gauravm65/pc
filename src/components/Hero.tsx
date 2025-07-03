@@ -29,17 +29,13 @@ const Hero: React.FC = () => {
   const projectRef = useRef<UnicornProject | null>(null);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+    let pollTimeoutId: NodeJS.Timeout;
+    let isComponentMounted = true;
 
     const initializeAnimation = async () => {
       try {
         console.log('🦄 Initializing Unicorn Studio animation...');
         
-        if (!window.UnicornStudio) {
-          console.error('❌ Unicorn Studio SDK not loaded');
-          return;
-        }
-
         if (!animationRef.current) {
           console.error('❌ Animation container element not found');
           return;
@@ -56,31 +52,48 @@ const Hero: React.FC = () => {
           projectId: 'HTiK3tBRpBBsuLhO0T5h'
         });
 
-        projectRef.current = project;
-        console.log('✅ Unicorn Studio animation loaded successfully');
+        if (isComponentMounted) {
+          projectRef.current = project;
+          console.log('✅ Unicorn Studio animation loaded successfully');
+        } else {
+          // Component was unmounted, clean up immediately
+          project.destroy();
+        }
 
       } catch (error) {
         console.error('❌ Failed to load Unicorn Studio animation:', error);
       }
     };
 
-    // Wait for DOM to be ready and SDK to load
-    if (window.UnicornStudio) {
-      initializeAnimation();
-    } else {
-      timeoutId = setTimeout(() => {
-        if (window.UnicornStudio) {
-          initializeAnimation();
-        } else {
-          console.error('❌ Unicorn Studio SDK failed to load after timeout');
-        }
-      }, 2000);
-    }
+    const waitForUnicornStudio = (attempts = 0, maxAttempts = 20) => {
+      if (!isComponentMounted) return;
+
+      // Check if UnicornStudio exists and launchProject is a function
+      if (window.UnicornStudio && typeof window.UnicornStudio.launchProject === 'function') {
+        console.log('✅ Unicorn Studio SDK fully loaded');
+        initializeAnimation();
+        return;
+      }
+
+      if (attempts >= maxAttempts) {
+        console.error('❌ Unicorn Studio SDK failed to load after maximum attempts');
+        return;
+      }
+
+      console.log(`⏳ Waiting for Unicorn Studio SDK... (attempt ${attempts + 1}/${maxAttempts})`);
+      pollTimeoutId = setTimeout(() => {
+        waitForUnicornStudio(attempts + 1, maxAttempts);
+      }, 500);
+    };
+
+    // Start polling for the SDK
+    waitForUnicornStudio();
 
     // Cleanup function
     return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
+      isComponentMounted = false;
+      if (pollTimeoutId) {
+        clearTimeout(pollTimeoutId);
       }
       if (projectRef.current) {
         console.log('🧹 Cleaning up Unicorn Studio animation');
