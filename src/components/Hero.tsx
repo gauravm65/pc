@@ -3,7 +3,10 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 
 // Unicorn Studio types
 interface UnicornStudioAPI {
-  launchProject: (config: UnicornConfig) => Promise<UnicornProject>;
+  init: (config: UnicornConfig) => Promise<UnicornProject>;
+  addScene: (scene: any) => void;
+  destroy: () => void;
+  unbindEvents: () => void;
 }
 
 interface UnicornConfig {
@@ -20,9 +23,7 @@ interface UnicornProject {
 
 declare global {
   interface Window {
-    UnicornStudio: {
-      default: UnicornStudioAPI;
-    } & UnicornStudioAPI;
+    UnicornStudio: UnicornStudioAPI;
   }
 }
 
@@ -91,12 +92,9 @@ const Hero: React.FC = () => {
           rect: animationRef.current.getBoundingClientRect()
         });
 
-        console.log('🚀 Launching Unicorn Studio project: HTiK3tBRpBBsuLhO0T5h');
-
-        // Try to access launchProject from either direct property or default property
-        const unicornAPI = window.UnicornStudio.launchProject ? window.UnicornStudio : window.UnicornStudio.default;
+        console.log('🚀 Initializing Unicorn Studio project: HTiK3tBRpBBsuLhO0T5h');
         
-        const project = await unicornAPI.launchProject({
+        const project = await window.UnicornStudio.init({
           dpi: 1,
           scale: 1,
           lazyLoad: false,
@@ -143,17 +141,11 @@ const Hero: React.FC = () => {
       
       if (window.UnicornStudio) {
         console.log('UnicornStudio object:', window.UnicornStudio);
-        console.log('launchProject method type (direct):', typeof window.UnicornStudio.launchProject);
-        console.log('launchProject method type (default):', typeof window.UnicornStudio.default?.launchProject);
+        console.log('init method type:', typeof window.UnicornStudio.init);
       }
 
-      // Check if UnicornStudio exists and launchProject is available either directly or via default
-      const hasLaunchProject = window.UnicornStudio && (
-        typeof window.UnicornStudio.launchProject === 'function' ||
-        typeof window.UnicornStudio.default?.launchProject === 'function'
-      );
-
-      if (hasLaunchProject) {
+      // Check if UnicornStudio exists and init method is available
+      if (window.UnicornStudio && typeof window.UnicornStudio.init === 'function') {
         console.log('✅ Unicorn Studio SDK fully loaded and ready');
         initializeAnimation();
         return;
@@ -163,8 +155,7 @@ const Hero: React.FC = () => {
         console.error('❌ Unicorn Studio SDK failed to load after maximum attempts');
         console.error('Final state check:', {
           unicornStudioExists: !!window.UnicornStudio,
-          launchProjectType: window.UnicornStudio ? typeof window.UnicornStudio.launchProject : 'N/A',
-          defaultLaunchProjectType: window.UnicornStudio?.default ? typeof window.UnicornStudio.default.launchProject : 'N/A'
+          initMethodType: window.UnicornStudio ? typeof window.UnicornStudio.init : 'N/A'
         });
         return;
       }
