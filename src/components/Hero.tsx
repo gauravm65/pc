@@ -42,10 +42,16 @@ const Hero: React.FC = () => {
         }
 
         console.log('✅ Animation container found:', animationRef.current);
+        console.log('📏 Container dimensions:', {
+          width: animationRef.current.offsetWidth,
+          height: animationRef.current.offsetHeight,
+          rect: animationRef.current.getBoundingClientRect()
+        });
+
         console.log('🚀 Launching Unicorn Studio project: HTiK3tBRpBBsuLhO0T5h');
 
         const project = await window.UnicornStudio.launchProject({
-          dpi: 1.5,
+          dpi: 1,
           scale: 1,
           lazyLoad: false,
           element: animationRef.current,
@@ -55,6 +61,20 @@ const Hero: React.FC = () => {
         if (isComponentMounted) {
           projectRef.current = project;
           console.log('✅ Unicorn Studio animation loaded successfully');
+          console.log('🎬 Project object:', project);
+          
+          // Check if canvas was created
+          const canvas = animationRef.current?.querySelector('canvas');
+          if (canvas) {
+            console.log('✅ Canvas element found:', canvas);
+            console.log('📏 Canvas dimensions:', {
+              width: canvas.width,
+              height: canvas.height,
+              style: canvas.style.cssText
+            });
+          } else {
+            console.warn('⚠️ No canvas element found in animation container');
+          }
         } else {
           // Component was unmounted, clean up immediately
           project.destroy();
@@ -62,25 +82,40 @@ const Hero: React.FC = () => {
 
       } catch (error) {
         console.error('❌ Failed to load Unicorn Studio animation:', error);
+        console.error('Error details:', {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          stack: error instanceof Error ? error.stack : 'No stack trace'
+        });
       }
     };
 
     const waitForUnicornStudio = (attempts = 0, maxAttempts = 20) => {
       if (!isComponentMounted) return;
 
+      console.log(`🔍 Checking for Unicorn Studio SDK (attempt ${attempts + 1}/${maxAttempts})`);
+      console.log('Window.UnicornStudio exists:', !!window.UnicornStudio);
+      
+      if (window.UnicornStudio) {
+        console.log('UnicornStudio object:', window.UnicornStudio);
+        console.log('launchProject method type:', typeof window.UnicornStudio.launchProject);
+      }
+
       // Check if UnicornStudio exists and launchProject is a function
       if (window.UnicornStudio && typeof window.UnicornStudio.launchProject === 'function') {
-        console.log('✅ Unicorn Studio SDK fully loaded');
+        console.log('✅ Unicorn Studio SDK fully loaded and ready');
         initializeAnimation();
         return;
       }
 
       if (attempts >= maxAttempts) {
         console.error('❌ Unicorn Studio SDK failed to load after maximum attempts');
+        console.error('Final state check:', {
+          unicornStudioExists: !!window.UnicornStudio,
+          launchProjectType: window.UnicornStudio ? typeof window.UnicornStudio.launchProject : 'N/A'
+        });
         return;
       }
 
-      console.log(`⏳ Waiting for Unicorn Studio SDK... (attempt ${attempts + 1}/${maxAttempts})`);
       pollTimeoutId = setTimeout(() => {
         waitForUnicornStudio(attempts + 1, maxAttempts);
       }, 500);
@@ -108,24 +143,18 @@ const Hero: React.FC = () => {
       {/* Unicorn Studio Animation Background */}
       <div 
         ref={animationRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ zIndex: 1 }}
+        className="absolute inset-0 w-full h-full bg-red-500/10"
+        style={{ 
+          zIndex: 1,
+          pointerEvents: 'none'
+        }}
       />
       
-      {/* Fallback Background */}
+      {/* Fallback Background - Only show if animation fails */}
       <div 
-        className="absolute inset-0 w-full h-full bg-hero-gradient"
+        className="absolute inset-0 w-full h-full bg-hero-gradient opacity-50"
         style={{ zIndex: 2 }}
       />
-      
-      {/* Original Background Image (as additional fallback) */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden" style={{ zIndex: 3 }}>
-        <img 
-          className="absolute w-full h-full object-cover opacity-20" 
-          src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b906700010-a1a1b0226e116a2a6c52.png" 
-          alt="a dark purple and blue nebula in deep space, abstract background, digital art" 
-        />
-      </div>
 
       {/* Hero Content */}
       <div className="relative px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto" style={{ zIndex: 100 }}>
