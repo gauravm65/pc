@@ -2,8 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { Sparkles, ArrowRight } from 'lucide-react';
 
 // Unicorn Studio types
-interface UnicornStudio {
+interface UnicornStudioAPI {
   launchProject: (config: UnicornConfig) => Promise<UnicornProject>;
+}
+
+interface UnicornStudio {
+  default: UnicornStudioAPI;
 }
 
 interface UnicornConfig {
@@ -48,7 +52,7 @@ const Hero: React.FC = () => {
         console.log('✅ Animation container found:', animationRef.current);
         console.log('🚀 Launching Unicorn Studio project: HTiK3tBRpBBsuLhO0T5h');
 
-        const project = await window.UnicornStudio.launchProject({
+        const project = await window.UnicornStudio.default.launchProject({
           dpi: 1.5,
           scale: 1,
           lazyLoad: false,
