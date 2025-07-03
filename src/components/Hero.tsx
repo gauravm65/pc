@@ -24,10 +24,51 @@ declare global {
 const Hero: React.FC = () => {
   const animationRef = useRef<HTMLDivElement>(null);
   const projectRef = useRef<UnicornProject | null>(null);
+  const scriptLoadedRef = useRef<boolean>(false);
 
   useEffect(() => {
     let pollTimeoutId: NodeJS.Timeout;
     let isComponentMounted = true;
+
+    const loadUnicornStudioScript = (): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        // Check if script is already loaded or being loaded
+        if (window.UnicornStudio || scriptLoadedRef.current) {
+          console.log('🦄 Unicorn Studio SDK already available or loading');
+          resolve();
+          return;
+        }
+
+        // Check if script element already exists
+        const existingScript = document.querySelector('script[src*="unicornStudio.umd.js"]');
+        if (existingScript) {
+          console.log('🦄 Unicorn Studio script element already exists');
+          scriptLoadedRef.current = true;
+          resolve();
+          return;
+        }
+
+        console.log('🦄 Loading Unicorn Studio SDK dynamically...');
+        
+        const script = document.createElement('script');
+        script.src = 'https://cdn.unicorn.studio/v1.4.1/unicornStudio.umd.js';
+        script.async = true;
+        
+        script.onload = () => {
+          console.log('✅ Unicorn Studio SDK script loaded successfully');
+          scriptLoadedRef.current = true;
+          resolve();
+        };
+        
+        script.onerror = (error) => {
+          console.error('❌ Failed to load Unicorn Studio SDK script:', error);
+          scriptLoadedRef.current = false;
+          reject(new Error('Failed to load Unicorn Studio SDK'));
+        };
+        
+        document.head.appendChild(script);
+      });
+    };
 
     const initializeAnimation = async () => {
       try {
@@ -115,8 +156,18 @@ const Hero: React.FC = () => {
       }, 500);
     };
 
-    // Start polling for the SDK
-    waitForUnicornStudio();
+    // Load the script and then start polling
+    const initializeSDK = async () => {
+      try {
+        await loadUnicornStudioScript();
+        // Start polling for the SDK to be available
+        waitForUnicornStudio();
+      } catch (error) {
+        console.error('❌ Failed to load Unicorn Studio SDK script:', error);
+      }
+    };
+
+    initializeSDK();
 
     // Cleanup function
     return () => {
