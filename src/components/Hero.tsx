@@ -6,10 +6,6 @@ interface UnicornStudioAPI {
   launchProject: (config: UnicornConfig) => Promise<UnicornProject>;
 }
 
-interface UnicornStudio {
-  default: UnicornStudioAPI;
-}
-
 interface UnicornConfig {
   dpi: number;
   scale: number;
@@ -24,7 +20,7 @@ interface UnicornProject {
 
 declare global {
   interface Window {
-    UnicornStudio: UnicornStudio;
+    UnicornStudio: UnicornStudioAPI;
   }
 }
 
@@ -52,7 +48,7 @@ const Hero: React.FC = () => {
         console.log('✅ Animation container found:', animationRef.current);
         console.log('🚀 Launching Unicorn Studio project: HTiK3tBRpBBsuLhO0T5h');
 
-        const project = await window.UnicornStudio.default.launchProject({
+        const project = await window.UnicornStudio.launchProject({
           dpi: 1.5,
           scale: 1,
           lazyLoad: false,
