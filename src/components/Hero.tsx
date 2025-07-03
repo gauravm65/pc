@@ -155,17 +155,17 @@ const Hero: React.FC = () => {
       {/* Unicorn Studio Animation Background */}
       <div 
         ref={animationRef}
-        className="absolute inset-0 w-full h-full bg-red-500/10"
+        className="absolute inset-0 w-full h-full"
         style={{ 
-          zIndex: 1,
+          zIndex: 2,
           pointerEvents: 'none'
         }}
       />
       
       {/* Fallback Background - Only show if animation fails */}
       <div 
-        className="absolute inset-0 w-full h-full bg-hero-gradient opacity-50"
-        style={{ zIndex: 2 }}
+        className="absolute inset-0 w-full h-full bg-transparent"
+        style={{ zIndex: 1 }}
       />
 
       {/* Hero Content */}
