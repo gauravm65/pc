@@ -217,7 +217,7 @@ const Hero: React.FC = () => {
           <span className="text-brand-gray-light">1 Click Alchemy - AI Automations That Scale</span>
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-white leading-tight max-w-5xl mx-auto drop-shadow-lg">
-          Scale Faster And Reliably With AI Automations And Agents.
+          Scale Faster And Reliably With AI Automations And Agents
         </h1>
         <p className="mt-4 sm:mt-6 text-base sm:text-lg lg:text-xl text-brand-gray-medium max-w-2xl mx-auto leading-relaxed drop-shadow-md">
           Experience the future of business with intelligent, scalable automation solutions tailored to your needs.
