@@ -1,27 +1,23 @@
 import React from 'react';
-import Header from './components/Header';
 import Hero from './components/Hero';
-import WhoWeAre from './components/WhoWeAre';
-import Process from './components/Process';
-import Services from './components/Services';
-import Benefits from './components/Benefits';
-import Infrastructure from './components/Infrastructure';
-import CTA from './components/CTA';
+import LogoBar from './components/LogoBar';
+import HowItWorks from './components/HowItWorks';
+import PortalMockup from './components/PortalMockup';
+import WhatYouGet from './components/WhatYouGet';
+import FinalCTA from './components/FinalCTA';
 import Footer from './components/Footer';
 
 function App() {
   return (
-    <div className="bg-brand-bg text-white font-inter antialiased">
-      <div className="w-full mx-auto">
-        <Header />
+    <div className="bg-white text-brand-black font-inter antialiased overflow-x-hidden">
+      <div className="bg-white mx-auto">
         <main>
           <Hero />
-          <WhoWeAre />
-          <Process />
-          <Services />
-          <Benefits />
-          <Infrastructure />
-          <CTA />
+          <LogoBar />
+          <HowItWorks />
+          <PortalMockup />
+          <WhatYouGet />
+          <FinalCTA />
         </main>
         <Footer />
       </div>

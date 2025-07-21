@@ -1,230 +1,120 @@
-import React, { useEffect, useRef } from 'react';
-import { Sparkles, ArrowRight } from 'lucide-react';
-
-// Unicorn Studio types
-interface UnicornStudioAPI {
-  init: (config: UnicornConfig) => Promise<UnicornProject>;
-  addScene: (scene: any) => void;
-  destroy: () => void;
-  unbindEvents: () => void;
-}
-
-interface UnicornConfig {
-  dpi: number;
-  scale: number;
-  lazyLoad: boolean;
-  element: HTMLElement;
-  projectId: string;
-}
-
-interface UnicornProject {
-  destroy: () => void;
-}
-
-declare global {
-  interface Window {
-    UnicornStudio: UnicornStudioAPI;
-  }
-}
+import React from 'react';
 
 const Hero: React.FC = () => {
-  const animationRef = useRef<HTMLDivElement>(null);
-  const projectRef = useRef<UnicornProject | null>(null);
-  const scriptLoadedRef = useRef<boolean>(false);
-
-  useEffect(() => {
-    let pollTimeoutId: NodeJS.Timeout;
-    let isComponentMounted = true;
-
-    const loadUnicornStudioScript = (): Promise<void> => {
-      return new Promise((resolve, reject) => {
-        // Check if script is already loaded or being loaded
-        if (window.UnicornStudio || scriptLoadedRef.current) {
-          console.log('🦄 Unicorn Studio SDK already available or loading');
-          resolve();
-          return;
-        }
-
-        // Check if script element already exists
-        const existingScript = document.querySelector('script[src*="unicornStudio.umd.js"]');
-        if (existingScript) {
-          console.log('🦄 Unicorn Studio script element already exists');
-          scriptLoadedRef.current = true;
-          resolve();
-          return;
-        }
-
-        console.log('🦄 Loading Unicorn Studio SDK dynamically...');
-        
-        const script = document.createElement('script');
-        script.src = 'https://cdn.unicorn.studio/v1.4.1/unicornStudio.umd.js';
-        script.async = true;
-        
-        script.onload = () => {
-          console.log('✅ Unicorn Studio SDK script loaded successfully');
-          scriptLoadedRef.current = true;
-          resolve();
-        };
-        
-        script.onerror = (error) => {
-          console.error('❌ Failed to load Unicorn Studio SDK script:', error);
-          scriptLoadedRef.current = false;
-          reject(new Error('Failed to load Unicorn Studio SDK'));
-        };
-        
-        document.head.appendChild(script);
-      });
-    };
-
-    const initializeAnimation = async () => {
-      try {
-        console.log('🦄 Initializing Unicorn Studio animation...');
-        
-        if (!animationRef.current) {
-          console.error('❌ Animation container element not found');
-          return;
-        }
-
-        console.log('✅ Animation container found:', animationRef.current);
-        console.log('📏 Container dimensions:', {
-          width: animationRef.current.offsetWidth,
-          height: animationRef.current.offsetHeight,
-          rect: animationRef.current.getBoundingClientRect()
-        });
-
-        console.log('🚀 Initializing Unicorn Studio project: HTiK3tBRpBBsuLhO0T5h');
-        
-        const project = await window.UnicornStudio.init({
-          dpi: 1,
-          scale: 1,
-          lazyLoad: false,
-          element: animationRef.current,
-          projectId: 'HTiK3tBRpBBsuLhO0T5h'
-        });
-
-        if (isComponentMounted) {
-          projectRef.current = project;
-          console.log('✅ Unicorn Studio animation loaded successfully');
-          console.log('🎬 Project object:', project);
-          
-          // Check if canvas was created
-          const canvas = animationRef.current?.querySelector('canvas');
-          if (canvas) {
-            console.log('✅ Canvas element found:', canvas);
-            console.log('📏 Canvas dimensions:', {
-              width: canvas.width,
-              height: canvas.height,
-              style: canvas.style.cssText
-            });
-          } else {
-            console.warn('⚠️ No canvas element found in animation container');
-          }
-        } else {
-          // Component was unmounted, clean up immediately
-          project.destroy();
-        }
-
-      } catch (error) {
-        console.error('❌ Failed to load Unicorn Studio animation:', error);
-        console.error('Error details:', {
-          message: error instanceof Error ? error.message : 'Unknown error',
-          stack: error instanceof Error ? error.stack : 'No stack trace'
-        });
-      }
-    };
-
-    const waitForUnicornStudio = (attempts = 0, maxAttempts = 20) => {
-      if (!isComponentMounted) return;
-
-      console.log(`🔍 Checking for Unicorn Studio SDK (attempt ${attempts + 1}/${maxAttempts})`);
-      console.log('Window.UnicornStudio exists:', !!window.UnicornStudio);
-      
-      if (window.UnicornStudio) {
-        console.log('UnicornStudio object:', window.UnicornStudio);
-        console.log('init method type:', typeof window.UnicornStudio.init);
-      }
-
-      // Check if UnicornStudio exists and init method is available
-      if (window.UnicornStudio && typeof window.UnicornStudio.init === 'function') {
-        console.log('✅ Unicorn Studio SDK fully loaded and ready');
-        initializeAnimation();
-        return;
-      }
-
-      if (attempts >= maxAttempts) {
-        console.error('❌ Unicorn Studio SDK failed to load after maximum attempts');
-        console.error('Final state check:', {
-          unicornStudioExists: !!window.UnicornStudio,
-          initMethodType: window.UnicornStudio ? typeof window.UnicornStudio.init : 'N/A'
-        });
-        return;
-      }
-
-      pollTimeoutId = setTimeout(() => {
-        waitForUnicornStudio(attempts + 1, maxAttempts);
-      }, 500);
-    };
-
-    // Load the script and then start polling
-    const initializeSDK = async () => {
-      try {
-        await loadUnicornStudioScript();
-        // Start polling for the SDK to be available
-        waitForUnicornStudio();
-      } catch (error) {
-        console.error('❌ Failed to load Unicorn Studio SDK script:', error);
-      }
-    };
-
-    initializeSDK();
-
-    // Cleanup function
-    return () => {
-      isComponentMounted = false;
-      if (pollTimeoutId) {
-        clearTimeout(pollTimeoutId);
-      }
-      if (projectRef.current) {
-        console.log('🧹 Cleaning up Unicorn Studio animation');
-        projectRef.current.destroy();
-        projectRef.current = null;
-      }
-    };
-  }, []);
-
   return (
-    <section className="relative pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 lg:pb-24 text-center min-h-[600px] sm:min-h-[650px] lg:h-[700px] flex flex-col items-center justify-center overflow-hidden">
-      {/* Unicorn Studio Animation Background */}
-      <div 
-        ref={animationRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ 
-          zIndex: 2,
-          pointerEvents: 'none'
-        }}
-      />
-      
-      {/* Fallback Background - Only show if animation fails */}
-      <div 
-        className="absolute inset-0 w-full h-full bg-transparent"
-        style={{ zIndex: 1 }}
-      />
+    <section className="relative h-screen flex items-center overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800">
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video 
+          className="w-full h-full object-cover opacity-40" 
+          src="https://res.cloudinary.com/ds47qe0qt/video/upload/v1753076125/u8174362837_futuristic_humanoid_AI_figure_with_a_calm_and_int_a62dc9c4-2de8-41b4-a992-afc166c1f37f_1_we4im9.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent"></div>
+      </div>
 
-      {/* Hero Content */}
-      <div className="relative px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto" style={{ zIndex: 100 }}>
-        <div className="inline-flex items-center bg-brand-gray-dark/80 backdrop-blur-sm border border-brand-gray-border px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm mb-4 sm:mb-6">
-          <Sparkles className="text-brand-purple mr-1.5 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
-          <span className="text-brand-gray-light">1 Click Alchemy - AI Automations That Scale</span>
+      {/* Main Content */}
+      <div className="relative z-10 container mx-auto px-8 lg:px-16">
+        <div className="grid grid-cols-12 gap-8 items-center h-screen">
+          {/* Left Content */}
+          <div className="col-span-12 lg:col-span-7 space-y-6">
+            {/* Badge */}
+            <div className="inline-flex items-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-300/30 px-5 py-2.5 rounded-full shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
+              <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mr-3 animate-pulse"></div>
+              <span className="text-sm font-semibold text-white tracking-wide">BUILT FOR PERFORMANCE</span>
+            </div>
+
+            {/* Main Heading */}
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[0.95] tracking-tight">
+                The AI-Powered{' '}
+                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent drop-shadow-lg">
+                  Copy System{' '}
+                </span>
+                Built for Performance
+              </h1>
+              
+              <p className="text-lg md:text-xl text-white/85 leading-relaxed max-w-xl font-light">
+                Custom GPT agents + elite copywriters, tuned to your brand and customer journey.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-2">
+              <button className="group bg-gradient-to-r from-white to-gray-50 text-slate-900 px-8 py-4 rounded-xl font-bold text-base hover:from-gray-50 hover:to-white transform hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:shadow-white/30">
+                <span className="flex items-center justify-center gap-2">
+                  Build My Copy System
+                  <i className="fa-solid fa-arrow-right text-sm group-hover:translate-x-1 transition-transform duration-300"></i>
+                </span>
+              </button>
+              <button className="bg-white/5 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-medium text-base hover:bg-white/10 hover:border-white/30 transition-all duration-300 shadow-lg hover:shadow-xl">
+                Schedule a Demo
+              </button>
+            </div>
+          </div>
+
+          {/* Right Content - Feature Cards */}
+          <div className="col-span-12 lg:col-span-5 space-y-4">
+            {/* Why It Works Card */}
+            <div className="bg-white/95 backdrop-blur-sm p-6 rounded-2xl shadow-2xl border border-white/20 hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 group">
+              <div className="flex items-center mb-4">
+                <h3 className="text-xl font-bold text-slate-900">Why It Works</h3>
+                <div className="w-8 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 ml-3 group-hover:w-12 transition-all duration-300"></div>
+              </div>
+              <p className="text-slate-600 mb-5 leading-relaxed text-sm">
+                Our system is built on proven direct response first principles.
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center group/item">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>
+                  <span className="text-slate-700 font-medium text-sm">Emotional Intelligence</span>
+                </div>
+                <div className="flex items-center group/item">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>
+                  <span className="text-slate-700 font-medium text-sm">Conversion Frameworks</span>
+                </div>
+                <div className="flex items-center group/item">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>
+                  <span className="text-slate-700 font-medium text-sm">Anti-AI Filter</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Elite Expertise Card */}
+            <div className="bg-white/95 backdrop-blur-sm p-6 rounded-2xl shadow-2xl border border-white/20 hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 group">
+              <h3 className="text-lg font-bold text-slate-900 mb-3">Elite Human Expertise</h3>
+              <p className="text-slate-600 mb-4 leading-relaxed text-sm">
+                Your agents are paired with world-class copywriters.
+              </p>
+              <div className="flex items-center">
+                <div className="flex -space-x-3">
+                  <img className="w-12 h-12 rounded-full border-3 border-white shadow-lg" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Expert 1" />
+                  <img className="w-12 h-12 rounded-full border-3 border-white shadow-lg" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Expert 2" />
+                  <img className="w-12 h-12 rounded-full border-3 border-white shadow-lg" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Expert 3" />
+                </div>
+                <div className="ml-4">
+                  <span className="text-slate-500 font-medium">+12 Experts</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial Card */}
+            <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-300/30 p-5 rounded-2xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 group">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <i className="fa-solid fa-quote text-white text-xs"></i>
+                </div>
+                <div>
+                  <p className="text-white font-semibold text-base mb-1">"Increased our conversion rate by 340%"</p>
+                  <p className="text-white/80 text-sm">Sarah Chen, Marketing Director</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-white leading-tight max-w-5xl mx-auto drop-shadow-lg">
-          Scale Faster And Reliably With AI Automations And Agents
-        </h1>
-        <p className="mt-4 sm:mt-6 text-base sm:text-lg lg:text-xl text-brand-gray-medium max-w-2xl mx-auto leading-relaxed drop-shadow-md">
-          Experience the future of business with intelligent, scalable automation solutions tailored to your needs.
-        </p>
-        <button className="mt-8 sm:mt-10 inline-block bg-brand-purple hover:bg-brand-purple/90 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-colors text-sm sm:text-base shadow-lg hover:shadow-xl">
-          Schedule A Quick Call <ArrowRight className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4 inline" />
-        </button>
       </div>
     </section>
   );
