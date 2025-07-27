@@ -3,76 +3,103 @@ import React from 'react';
 const PortalMockup: React.FC = () => {
   return (
     <section className="py-24 bg-white">
-      <div className="container mx-auto px-6 text-center">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-brand-black mb-4">
-          Meet Your Copy Intelligence Engine
-        </h2>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-12">
-          Every piece of copy is powered by deep contextual understanding. Your agents know your brand, customers, and market better than any human copywriter.
-        </p>
-        
-        {/* Context Engine Visual */}
-        <div className="relative bg-gradient-to-br from-gray-900 via-purple-900/20 to-blue-900/20 rounded-3xl p-8 mb-12 shadow-2xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
-              <i className="fa-solid fa-user-group text-2xl text-blue-400 mb-2"></i>
-              <h4 className="text-white font-semibold text-sm">Customer Insights</h4>
-              <p className="text-gray-300 text-xs">Demographics, psychographics, pain points</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
-              <i className="fa-solid fa-bullhorn text-2xl text-purple-400 mb-2"></i>
-              <h4 className="text-white font-semibold text-sm">Brand Voice</h4>
-              <p className="text-gray-300 text-xs">Tone, personality, messaging pillars</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
-              <i className="fa-solid fa-chart-line text-2xl text-green-400 mb-2"></i>
-              <h4 className="text-white font-semibold text-sm">Performance Data</h4>
-              <p className="text-gray-300 text-xs">What converts, what doesn't</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
-              <i className="fa-solid fa-crosshairs text-2xl text-orange-400 mb-2"></i>
-              <h4 className="text-white font-semibold text-sm">Competitive Intel</h4>
-              <p className="text-gray-300 text-xs">Market positioning, offer analysis</p>
-            </div>
+      <div className="container mx-auto px-6">
+        {/* Solution Introduction */}
+        <div className="max-w-3xl mx-auto text-center mb-12">
+          <div className="space-y-4 text-gray-700 leading-relaxed mb-8">
+            <p className="text-lg font-semibold text-gray-900">
+              What if you could capture elite copywriter skills for unlimited copy production?
+            </p>
+            
+            <p className="text-lg font-semibold text-gray-900">
+              Generate dozens of high-converting variations in hours, not weeks?
+            </p>
+            
+            <p className="text-lg font-semibold text-gray-900">
+              Never choose between speed and quality again?
+            </p>
           </div>
           
-          {/* Central AI Brain */}
-          <div className="relative mx-auto w-48 h-48 mb-8">
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 rounded-full animate-pulse opacity-20"></div>
-            <div className="absolute inset-4 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 rounded-full opacity-40"></div>
-            <div className="absolute inset-8 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-full opacity-60"></div>
-            <div className="absolute inset-12 bg-white rounded-full flex items-center justify-center">
-              <i className="fa-solid fa-brain text-4xl text-purple-600"></i>
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl border border-purple-200 mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-4">
+              That's PerformanceCopy.ai
+            </h2>
+            
+            <div className="max-w-2xl mx-auto space-y-3 text-gray-700 text-sm">
+              <p>
+                Custom Copy Agents built for your business using our Core Conversion Story framework - same methodology driving 8-9 figure operations.
+              </p>
+              
+              <p>
+                Agents trained specifically for your business, customers, and market.
+              </p>
+              
+              <p>
+                Partnered with world-class human copywriters for unlimited, high-converting copy.
+              </p>
+              
+              <p className="text-base font-semibold text-purple-700">
+                Not replacing creativity. Amplifying it.
+              </p>
+              
+              <p className="text-base font-medium text-gray-900 italic">
+                Like giving a copywriter an Iron Man suit - instant strategic intelligence for brilliant copy in a fraction of the time.
+              </p>
             </div>
-            {/* Connecting Lines */}
-            <div className="absolute top-1/2 left-1/2 w-32 h-0.5 bg-gradient-to-r from-purple-400 to-transparent transform -translate-y-1/2 -translate-x-full"></div>
-            <div className="absolute top-1/2 left-1/2 w-32 h-0.5 bg-gradient-to-l from-purple-400 to-transparent transform -translate-y-1/2"></div>
-            <div className="absolute top-1/2 left-1/2 w-0.5 h-32 bg-gradient-to-t from-purple-400 to-transparent transform -translate-x-1/2 -translate-y-full"></div>
-            <div className="absolute top-1/2 left-1/2 w-0.5 h-32 bg-gradient-to-b from-purple-400 to-transparent transform -translate-x-1/2"></div>
-          </div>
-          
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-white mb-2">Context-Driven Copy Intelligence</h3>
-            <p className="text-gray-300">Every word is informed by your complete business context</p>
           </div>
         </div>
         
-        {/* Service Elevation */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl border border-purple-100">
-            <i className="fa-solid fa-rocket text-3xl text-purple-600 mb-4"></i>
-            <h4 className="text-xl font-bold mb-2">Launch Ready</h4>
-            <p className="text-gray-600 text-sm">From brief to launch in 48 hours. No revisions needed.</p>
+        {/* Core Conversion Story Framework Visual */}
+        <div className="relative bg-gradient-to-br from-gray-900 via-purple-900/20 to-blue-900/20 rounded-2xl p-6 mb-10 shadow-xl">
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-bold text-white mb-2">Core Conversion Story Framework</h3>
+            <p className="text-gray-300 text-sm">Methodology driving 8-9 figure results</p>
           </div>
-          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-2xl border border-blue-100">
-            <i className="fa-solid fa-infinity text-3xl text-blue-600 mb-4"></i>
-            <h4 className="text-xl font-bold mb-2">Infinite Scale</h4>
-            <p className="text-gray-600 text-sm">Unlimited copy across all channels. No bottlenecks.</p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            <div className="bg-white/10 backdrop-blur-sm p-3 rounded-lg border border-white/20 text-center">
+              <div className="text-xl text-red-400 mb-1">😣</div>
+              <h4 className="text-white font-semibold text-xs mb-1">Present Pain</h4>
+              <p className="text-gray-300 text-xs">Current problems</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm p-3 rounded-lg border border-white/20 text-center">
+              <div className="text-xl text-yellow-400 mb-1">🏝️</div>
+              <h4 className="text-white font-semibold text-xs mb-1">Paradise</h4>
+              <p className="text-gray-300 text-xs">Desired state</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm p-3 rounded-lg border border-white/20 text-center">
+              <div className="text-xl text-orange-400 mb-1">⚔️</div>
+              <h4 className="text-white font-semibold text-xs mb-1">Struggle</h4>
+              <p className="text-gray-300 text-xs">Failed attempts</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm p-3 rounded-lg border border-white/20 text-center">
+              <div className="text-xl text-green-400 mb-1">✨</div>
+              <h4 className="text-white font-semibold text-xs mb-1">Solution</h4>
+              <p className="text-gray-300 text-xs">Your approach</p>
+            </div>
           </div>
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-100">
-            <i className="fa-solid fa-trophy text-3xl text-green-600 mb-4"></i>
-            <h4 className="text-xl font-bold mb-2">Performance Guaranteed</h4>
-            <p className="text-gray-600 text-sm">Every piece optimized for conversion from day one.</p>
+          
+          <div className="text-center">
+            <p className="text-gray-300 text-xs">Trained for your business, customers, and market</p>
+          </div>
+        </div>
+        
+        {/* Key Benefits */}
+        <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-5 rounded-xl border border-purple-100 text-center">
+            <i className="fa-solid fa-brain text-2xl text-purple-600 mb-3"></i>
+            <h4 className="text-lg font-bold mb-2">Strategic Intelligence</h4>
+            <p className="text-gray-600 text-xs">Deep research systematized into custom agents</p>
+          </div>
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-5 rounded-xl border border-blue-100 text-center">
+            <i className="fa-solid fa-users text-2xl text-blue-600 mb-3"></i>
+            <h4 className="text-lg font-bold mb-2">Human + AI</h4>
+            <p className="text-gray-600 text-xs">World-class copywriters using your custom agents</p>
+          </div>
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-100 text-center">
+            <i className="fa-solid fa-rocket text-2xl text-green-600 mb-3"></i>
+            <h4 className="text-lg font-bold mb-2">Iron Man Suit</h4>
+            <p className="text-gray-600 text-xs">Instant strategic intelligence for brilliant copy</p>
           </div>
         </div>
       </div>
